@@ -12,8 +12,8 @@ export const postApi = api.injectEndpoints({
     }),
 
     getPostData: builder.query({
-      query: () => ({
-        url: '/v2/post/get_all_posts',
+      query: ({ page = 1, limit = 10, search = "" }) => ({
+        url: `/v2/post/get_all_posts?page=${page}&limit=${limit}&search=${search}`,
         method: "GET",
       }),
       providesTags: ["postTag"],

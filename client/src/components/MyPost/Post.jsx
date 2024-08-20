@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
-import { useGetMyPostDataQuery, usePostDataMutation, useUpdatePostDataMutation, useDeletePostDataMutation } from '../../features/api/postAPI/postApi';
+import {
+  useGetMyPostDataQuery,
+  usePostDataMutation,
+  useUpdatePostDataMutation,
+  useDeletePostDataMutation,
+} from '../../features/api/postAPI/postApi';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Post = () => {
   const userId = JSON.parse(localStorage.getItem('userId'));
@@ -53,12 +60,12 @@ const Post = () => {
 
     if (editingPost) {
       // Update the post
-      const response = await updatePostData({ _id: editingPost?._id, ...postPayload }).unwrap();
-      console.log('Updated post:', response);
+      await updatePostData({ _id: editingPost._id, ...postPayload }).unwrap();
+      toast.success('Post updated successfully!');
     } else {
       // Create a new post
-      const response = await postData(postPayload).unwrap();
-      console.log('Created post:', response);
+      await postData(postPayload).unwrap();
+      toast.success('Post added successfully!');
     }
 
     closeModal();
@@ -68,7 +75,7 @@ const Post = () => {
   const handleDelete = async () => {
     try {
       await deletePostData(deletingPostId).unwrap();
-      console.log('Post deleted successfully');
+      toast.success('Post deleted successfully!');
       refetch(); // Refetch posts after deletion
     } catch (error) {
       console.error('Failed to delete post:', error);
@@ -79,6 +86,7 @@ const Post = () => {
 
   return (
     <>
+    <ToastContainer />
       <button
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded float-right mt-5"
         onClick={() => openModal()}
@@ -94,8 +102,8 @@ const Post = () => {
               alt={card.title}
             />
             <div className="px-6 py-4">
-              <div className="font-bold text-xl mb-2">Title: {card?.title}</div>
-              <p className="text-gray-700 text-base">Description: {card?.content}</p>
+              <div className="font-bold text-xl mb-2">Title: {card.title}</div>
+              <p className="text-gray-700 text-base">Description: {card.content}</p>
               <div className="flex space-x-2 mt-2">
                 <button
                   className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
@@ -225,7 +233,9 @@ const Post = () => {
                     Confirm Deletion
                   </Dialog.Title>
                   <div className="mt-4">
-                    <p className="text-sm text-gray-500">Are you sure you want to delete this post? This action cannot be undone.</p>
+                    <p className="text-sm text-gray-500">
+                      Are you sure you want to delete this post? This action cannot be undone.
+                    </p>
                   </div>
                   <div className="mt-6 flex justify-between">
                     <button
