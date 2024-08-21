@@ -4,7 +4,7 @@ import { useGetPostDataQuery } from '../../features/api/postAPI/postApi';
 const Home = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
-  const limit = 3; // Number of posts per page
+  const limit = 8; // Number of posts per page
 
   const { data, isLoading, isError } = useGetPostDataQuery({ page, limit, search: searchTerm });
 
