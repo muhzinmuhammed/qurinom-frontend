@@ -9,7 +9,8 @@ import {
 } from '../../features/api/postAPI/postApi';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 const Post = () => {
   const userId = JSON.parse(localStorage.getItem('userId'));
   const { data, refetch } = useGetMyPostDataQuery(userId);
@@ -63,6 +64,10 @@ const Post = () => {
       await updatePostData({ _id: editingPost._id, ...postPayload }).unwrap();
       toast.success('Post updated successfully!');
     } else {
+      if (!postPayload.title || !postPayload.content) {
+        toast.error('Please fill in all fields');
+
+      }
       // Create a new post
       await postData(postPayload).unwrap();
       toast.success('Post added successfully!');
@@ -86,13 +91,15 @@ const Post = () => {
 
   return (
     <>
-    <ToastContainer />
-      <button
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded float-right mt-5"
-        onClick={() => openModal()}
-      >
-        Add Post
-      </button>
+      <ToastContainer />
+      <div className="flex justify-center items-center mt-5">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={() => openModal()}
+        >
+          Add Post
+        </button>
+      </div>
       <div className="flex flex-wrap justify-center gap-4 mt-28 p-4">
         {data?.data?.map((card) => (
           <div key={card._id} className="max-w-xs rounded overflow-hidden shadow-lg">
@@ -109,13 +116,13 @@ const Post = () => {
                   className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded"
                   onClick={() => openModal(card)}
                 >
-                  Edit
+                  <FontAwesomeIcon icon={faEdit} />
                 </button>
                 <button
                   className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                   onClick={() => openDeleteModal(card._id)}
                 >
-                  Delete
+                  <FontAwesomeIcon icon={faTrash} />
                 </button>
               </div>
             </div>
@@ -238,21 +245,22 @@ const Post = () => {
                     </p>
                   </div>
                   <div className="mt-6 flex justify-between">
-                    <button
-                      type="button"
-                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                      onClick={handleDelete}
-                    >
-                      Delete
-                    </button>
-                    <button
-                      type="button"
-                      className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                      onClick={closeDeleteModal}
-                    >
-                      Cancel
-                    </button>
-                  </div>
+  <button
+    type="button"
+    className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+    onClick={closeDeleteModal}
+  >
+    Cancel
+  </button>
+  <button
+    type="button"
+    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+    onClick={handleDelete}
+  >
+    Delete
+  </button>
+</div>
+
                 </Dialog.Panel>
               </Transition.Child>
             </div>
