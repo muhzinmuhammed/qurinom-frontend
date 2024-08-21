@@ -7,6 +7,7 @@ import UserLoginPage from './pages/Login/UserLoginPage';
 import HomePage from './pages/Home/HomePage';
 import PrivateRoute from './components/private/Index';
 import MyPostPage from './pages/MyPost/MyPostPage';
+import NotFound from './components/404Page/Index';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path="/register" element={<UserRegisterPage />} />
           <Route path="/login" element={<UserLoginPage />} />
+          <Route path="*" element={<NotFound />} />
           {/* Protected Route */}
           <Route element={<PrivateRoute />}>
             <Route path="/" element={<HomePage />} />
